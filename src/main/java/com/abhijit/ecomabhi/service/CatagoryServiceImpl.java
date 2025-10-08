@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CatagoryServiceImpl implements CatagoryService {
@@ -30,32 +28,27 @@ public class CatagoryServiceImpl implements CatagoryService {
 
     @Override
     public String deleteCatagory(Long catagoryId) {
-        List<Catagories> catagoriesList = catagoryRepository.findAll();
-        Catagories catagories = catagoriesList.stream()
-                .filter(c -> c.getCatagoryId().equals(catagoryId))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no matching catagory with this id"));
 
-            catagoryRepository.delete(catagories);
-            return "Catagory with ID " + catagoryId + " Deleted Successfully";
+        Catagories catagory = catagoryRepository.findById(catagoryId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, " There is no matchin catagory with this id")
+                );
+
+        catagoryRepository.delete(catagory);
+
+        return "Catagory with ID " + catagoryId + " Deleted Successfully";
 
     }
 
     @Override
     public Catagories updateCatagory(Long catagoryId, Catagories catagories) {
-        List<Catagories> catagoriesList = catagoryRepository.findAll();
+        Catagories savedCatagory = catagoryRepository.findById(catagoryId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no matching catagory with this id")
+                );
 
-        Optional<Catagories> optionalCatagories = catagoriesList.stream()
-                .filter(c -> c.getCatagoryId().equals(catagoryId))
-                .findFirst();
+        savedCatagory.setCatagoryName(catagories.getCatagoryName());
 
-        if(optionalCatagories.isPresent()) {
-            Catagories existingCatagories = optionalCatagories.get();
-            existingCatagories.setCatagoryName(catagories.getCatagoryName());
-            Catagories savedCatagory = catagoryRepository.save(existingCatagories);
-            return savedCatagory;
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no matching catagory with this id");
-        }
+        return catagoryRepository.save(savedCatagory);
     }
 }
