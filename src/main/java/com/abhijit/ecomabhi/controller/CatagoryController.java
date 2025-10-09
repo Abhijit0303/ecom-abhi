@@ -2,6 +2,7 @@ package com.abhijit.ecomabhi.controller;
 
 import com.abhijit.ecomabhi.model.Catagories;
 import com.abhijit.ecomabhi.service.CatagoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CatagoryController {
 
 //    @PostMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.POST)
-    public ResponseEntity<String> addCatagory(@RequestBody Catagories catagories) {
+    public ResponseEntity<String> addCatagory(@Valid @RequestBody Catagories catagories) {
         catagoryService.createCatagory(catagories);
         return new ResponseEntity<>("Catagory created successfully", HttpStatus.CREATED);
     }
