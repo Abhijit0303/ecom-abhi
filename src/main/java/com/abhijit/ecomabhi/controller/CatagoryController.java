@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,23 +35,14 @@ public class CatagoryController {
 //    @DeleteMapping("/admin/categories/{catagoryId}")
     @RequestMapping(value = "/admin/categories/{catagoryId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteCatagory(@PathVariable Long catagoryId) {
-        try{
-            String Status = catagoryService.deleteCatagory(catagoryId);
-            return new ResponseEntity<>(Status, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
-
+        String Status = catagoryService.deleteCatagory(catagoryId);
+        return new ResponseEntity<>(Status, HttpStatus.OK);
     }
 
 //    @PutMapping("/public/categories/{catagoryId}")
     @RequestMapping(value = "/public/categories/{catagoryId}", method = RequestMethod.PUT)
     public ResponseEntity<String>  updateCatagory(@PathVariable Long catagoryId, @RequestBody Catagories catagories) {
-        try {
-            Catagories Status = catagoryService.updateCatagory(catagoryId, catagories);
-            return new ResponseEntity<>("Catagory with ID " + catagoryId + " updated sucessfully", HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+        Catagories savedCatagory = catagoryService.updateCatagory(catagoryId, catagories);
+        return new ResponseEntity<>("Catagory with ID " + catagoryId + " updated sucessfully", HttpStatus.OK);
     }
 }

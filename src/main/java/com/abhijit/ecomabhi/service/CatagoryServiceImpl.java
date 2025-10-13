@@ -1,11 +1,11 @@
 package com.abhijit.ecomabhi.service;
 
+import com.abhijit.ecomabhi.exceptions.APIException;
+import com.abhijit.ecomabhi.exceptions.ResourceNotFoundException;
 import com.abhijit.ecomabhi.model.Catagories;
 import com.abhijit.ecomabhi.repositories.CatagoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,12 +17,20 @@ public class CatagoryServiceImpl implements CatagoryService {
 
     @Override
     public List<Catagories> getAllCatagories() {
-        return catagoryRepository.findAll();
+        List<Catagories> catagories = catagoryRepository.findAll();
+        if (catagories.isEmpty()) {
+            throw new APIException("No catagory created till now");
+        }
+        return catagories;
     }
 
     @Override
     public void createCatagory(Catagories catagories) {
-//        catagories.setCatagoryId(nextId++);
+//
+        Catagories savedCatagory = catagoryRepository.findByCatagoryName(catagories.getCatagoryName());
+        if  (savedCatagory != null) {
+            throw new APIException("Catagory with the name " + catagories.getCatagoryName() + " already exists !!!");
+        }
         catagoryRepository.save(catagories);
     }
 
@@ -31,7 +39,7 @@ public class CatagoryServiceImpl implements CatagoryService {
 
         Catagories catagory = catagoryRepository.findById(catagoryId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, " There is no matchin catagory with this id")
+                        () -> new ResourceNotFoundException("Catagory", "catagoryId", catagoryId)
                 );
 
         catagoryRepository.delete(catagory);
@@ -44,7 +52,7 @@ public class CatagoryServiceImpl implements CatagoryService {
     public Catagories updateCatagory(Long catagoryId, Catagories catagories) {
         Catagories savedCatagory = catagoryRepository.findById(catagoryId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no matching catagory with this id")
+                        () -> new ResourceNotFoundException("Catagory", "catagoryId", catagoryId)
                 );
 
         savedCatagory.setCatagoryName(catagories.getCatagoryName());
