@@ -1,6 +1,8 @@
 package com.abhijit.ecomabhi.controller;
 
 import com.abhijit.ecomabhi.model.Catagories;
+import com.abhijit.ecomabhi.payload.CatagoryDTO;
+import com.abhijit.ecomabhi.payload.CatagoryResponse;
 import com.abhijit.ecomabhi.service.CatagoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +21,17 @@ public class CatagoryController {
 
 //    @GetMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<List<Catagories>> getCatagoriesList() {
+    public ResponseEntity<CatagoryResponse> getCatagoriesList() {
 
-        List<Catagories> allCatagories = catagoryService.getAllCatagories();
-        return ResponseEntity.ok(allCatagories);
+        CatagoryResponse catagoryResponse= catagoryService.getAllCatagories();
+        return ResponseEntity.ok(catagoryResponse);
     }
 
 //    @PostMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.POST)
-    public ResponseEntity<String> addCatagory(@Valid @RequestBody Catagories catagories) {
-        catagoryService.createCatagory(catagories);
-        return new ResponseEntity<>("Catagory created successfully", HttpStatus.CREATED);
+    public ResponseEntity<CatagoryDTO> addCatagory(@Valid @RequestBody CatagoryDTO catagoryDTO) {
+        CatagoryDTO savedCatagoryDTO = catagoryService.createCatagory(catagoryDTO);
+        return new ResponseEntity<>(savedCatagoryDTO, HttpStatus.CREATED);
     }
 
 //    @DeleteMapping("/admin/categories/{catagoryId}")

@@ -1,12 +1,14 @@
 package com.abhijit.ecomabhi.service;
 
 import com.abhijit.ecomabhi.model.Catagories;
+import com.abhijit.ecomabhi.payload.CatagoryDTO;
+import com.abhijit.ecomabhi.payload.CatagoryResponse;
 
 import java.util.List;
 
 public interface CatagoryService {
-    List<Catagories> getAllCatagories();
-    void createCatagory(Catagories catagories);
+    CatagoryResponse getAllCatagories();
+    CatagoryDTO createCatagory(CatagoryDTO catagoryDTO);
 
    String deleteCatagory(Long catagoryId);
 
