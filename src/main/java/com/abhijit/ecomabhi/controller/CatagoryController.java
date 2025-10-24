@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/api")
@@ -36,15 +34,15 @@ public class CatagoryController {
 
 //    @DeleteMapping("/admin/categories/{catagoryId}")
     @RequestMapping(value = "/admin/categories/{catagoryId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteCatagory(@PathVariable Long catagoryId) {
-        String Status = catagoryService.deleteCatagory(catagoryId);
-        return new ResponseEntity<>(Status, HttpStatus.OK);
+    public ResponseEntity<CatagoryDTO> deleteCatagory(@PathVariable Long catagoryId) {
+        com.abhijit.ecomabhi.payload.CatagoryDTO deletedCatagoryDTO = catagoryService.deleteCatagory(catagoryId);
+        return new ResponseEntity<>(deletedCatagoryDTO, HttpStatus.OK);
     }
 
 //    @PutMapping("/public/categories/{catagoryId}")
     @RequestMapping(value = "/public/categories/{catagoryId}", method = RequestMethod.PUT)
-    public ResponseEntity<String>  updateCatagory(@PathVariable Long catagoryId, @RequestBody Catagories catagories) {
-        Catagories savedCatagory = catagoryService.updateCatagory(catagoryId, catagories);
-        return new ResponseEntity<>("Catagory with ID " + catagoryId + " updated sucessfully", HttpStatus.OK);
+    public ResponseEntity<CatagoryDTO>  updateCatagory(@PathVariable Long catagoryId, @RequestBody CatagoryDTO catagoryDTO) {
+        CatagoryDTO savedCatagoryDTO = catagoryService.updateCatagory(catagoryId, catagoryDTO);
+        return new ResponseEntity<>(savedCatagoryDTO, HttpStatus.OK);
     }
 }

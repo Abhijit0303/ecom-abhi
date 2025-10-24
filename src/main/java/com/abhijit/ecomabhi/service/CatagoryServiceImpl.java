@@ -50,7 +50,7 @@ public class CatagoryServiceImpl implements CatagoryService {
     }
 
     @Override
-    public String deleteCatagory(Long catagoryId) {
+    public CatagoryDTO deleteCatagory(Long catagoryId) {
 
         Catagories catagory = catagoryRepository.findById(catagoryId)
                 .orElseThrow(
@@ -59,19 +59,20 @@ public class CatagoryServiceImpl implements CatagoryService {
 
         catagoryRepository.delete(catagory);
 
-        return "Catagory with ID " + catagoryId + " Deleted Successfully";
+        return modelMapper.map(catagory, CatagoryDTO.class);
 
     }
 
     @Override
-    public Catagories updateCatagory(Long catagoryId, Catagories catagories) {
+    public CatagoryDTO updateCatagory(Long catagoryId, CatagoryDTO catagoryDTO) {
         Catagories savedCatagory = catagoryRepository.findById(catagoryId)
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Catagory", "catagoryId", catagoryId)
                 );
+        Catagories catagory = modelMapper.map(catagoryDTO, Catagories.class);
+        savedCatagory.setCatagoryName(catagory.getCatagoryName());
+        savedCatagory = catagoryRepository.save(savedCatagory);
 
-        savedCatagory.setCatagoryName(catagories.getCatagoryName());
-
-        return catagoryRepository.save(savedCatagory);
+        return modelMapper.map(savedCatagory, CatagoryDTO.class);
     }
 }
