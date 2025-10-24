@@ -7,7 +7,7 @@ import com.abhijit.ecomabhi.payload.CatagoryResponse;
 import java.util.List;
 
 public interface CatagoryService {
-    CatagoryResponse getAllCatagories();
+    CatagoryResponse getAllCatagories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
     CatagoryDTO createCatagory(CatagoryDTO catagoryDTO);
 
     CatagoryDTO deleteCatagory(Long catagoryId);

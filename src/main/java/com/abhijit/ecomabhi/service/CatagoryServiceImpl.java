@@ -8,6 +8,10 @@ import com.abhijit.ecomabhi.payload.CatagoryResponse;
 import com.abhijit.ecomabhi.repositories.CatagoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +26,14 @@ public class CatagoryServiceImpl implements CatagoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CatagoryResponse getAllCatagories() {
-        List<Catagories> catagories = catagoryRepository.findAll();
+    public CatagoryResponse getAllCatagories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                :  Sort.by(sortBy).descending();
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+        Page<Catagories> catagoriesPage = catagoryRepository.findAll(pageDetails);
+        List<Catagories> catagories = catagoriesPage.getContent();
         if (catagories.isEmpty()) {
             throw new APIException("No catagory created till now");
         }
@@ -34,6 +44,11 @@ public class CatagoryServiceImpl implements CatagoryService {
 
         CatagoryResponse catagoryResponse = new CatagoryResponse();
         catagoryResponse.setContent(catagoryDTOS);
+        catagoryResponse.setPageNumber(catagoriesPage.getNumber());
+        catagoryResponse.setPageSize(catagoriesPage.getSize());
+        catagoryResponse.setTotalElements(catagoriesPage.getTotalElements());
+        catagoryResponse.setTotalPages(catagoriesPage.getTotalPages());
+        catagoryResponse.setLastPage(catagoriesPage.isLast());
         return catagoryResponse;
     }
 

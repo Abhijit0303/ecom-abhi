@@ -1,6 +1,7 @@
 package com.abhijit.ecomabhi.controller;
 
-import com.abhijit.ecomabhi.model.Catagories;
+
+import com.abhijit.ecomabhi.config.AppConstants;
 import com.abhijit.ecomabhi.payload.CatagoryDTO;
 import com.abhijit.ecomabhi.payload.CatagoryResponse;
 import com.abhijit.ecomabhi.service.CatagoryService;
@@ -19,9 +20,13 @@ public class CatagoryController {
 
 //    @GetMapping("/public/categories")
     @RequestMapping(value = "/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<CatagoryResponse> getCatagoriesList() {
+    public ResponseEntity<CatagoryResponse> getCatagoriesList(@RequestParam (name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+                                                              @RequestParam (name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+                                                              @RequestParam (name = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+                                                              @RequestParam (name = "sortOrder", defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder
+    ) {
 
-        CatagoryResponse catagoryResponse= catagoryService.getAllCatagories();
+        CatagoryResponse catagoryResponse= catagoryService.getAllCatagories(pageNumber, pageSize, sortBy, sortOrder);
         return ResponseEntity.ok(catagoryResponse);
     }
 
